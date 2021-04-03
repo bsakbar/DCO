@@ -1,0 +1,201 @@
+body{
+  background-color: #1b2326;
+  /* background-color: white; */
+
+}
+
+h4{
+  text-align: left;
+  font-size: 28px;
+  font-family: "League Gothic";
+  /* text-transform: uppercase; */
+  color: #1b2326!important;
+
+
+}
+h5 {
+    text-align: left;
+}
+
+form{
+  float: right;
+  padding-right: 40px;
+  padding-top: 20px;
+
+}
+
+div.DTS div.dataTables_scrollBody {
+    background-color: white;
+}
+
+.sheet_name {
+    background-color: #1B2326;
+    font-size: 24px;
+    font-family: "League Gothic";
+    /* text-transform: uppercase; */
+    color:white;
+    padding-left: 5px;
+    margin-top: -3px;
+    height: 32px;
+    display: flex;
+}
+
+.container{
+  margin: 0px;
+}
+
+.legends{
+  display: flex;
+  margin-top:10px;
+}
+
+.legend_name{
+  display: flex;
+  letter-spacing: -0.5px;
+  color: white;
+  font-family: "Arial";
+  font-size: 12px;
+  margin-left:5px;
+  /* margin-top: 10px; */
+}
+
+.legend_1{
+  display: flex;
+  color: white;
+  background-color: #5EC7EB;
+  height: 10px;
+  width:10px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+
+.legend_2{
+  display: flex;
+  color: white;
+  background-color: #4e79a7;
+  height: 10px;
+  width:10px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+.legend_3{
+  display: flex;
+  color: white;
+  background-color: #FF8500;
+  height: 10px;
+  width:10px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+.sheet_name_2 {
+    /* font-size: 28px; */
+    font-weight: bold;
+    color: #1b2326!important;
+}
+
+div.tooltip {
+    /* position:absolute; */
+    display: flex;
+    text-align: left;
+    width: max-content;
+    height: max-content;
+    padding: 10px;
+    /* padding-left: 10px; */
+    font-family: "Arial";
+    background: #F5F2EE;
+    color: #1b2326;
+    font-size: 12px;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+.axisLine text{
+  fill: white;
+}
+.axisLine path{
+  stroke: white;
+  opacity: 0.5;
+}
+
+.axisLine line{
+  stroke: white;
+  opacity: 0.5;
+}
+
+
+#wrapper{
+  display: block;
+  padding-top: 10px;
+}
+
+/* .line {
+  fill: none;
+  stroke: lightgrey;
+  stroke-width: 2px;
+} */
+
+.grid line {
+  stroke: white;
+  stroke-opacity: 0.2;
+}
+
+.grid_y2 line {
+  stroke: lightgrey;
+  stroke-opacity: 0.5;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.grid_y2 path{
+  stroke: none;
+}
+
+.btn {
+	color: #5EC7EB!important;
+	background-color: transparent;
+	background-image: none;
+	border: none!important;
+}
+
+
+.btn:hover {
+	opacity: 0.8;
+}
+
+
+.ticks {
+  font-size: 10px;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #dcdcdc;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}
