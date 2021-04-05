@@ -156,6 +156,8 @@
         $('#wrapper').empty();
         const dateParser = d3.timeParse("%Y-%m-%d")
         const formatDate = d3.timeFormat("%b %-d, %y")
+        const formatDate2 = d3.timeFormat("%b %d")
+
         const xAccessor = d => dateParser(d.date)
         const yAccessor = d => d.impressions
         const y2Accessor = d => d.conv_rate
@@ -175,20 +177,28 @@
             }
         }
 
+        var j = 0;
+        var arr1_imp;
+        var imp_tac = [];
+        for(let i=0; i<arr_3.length; i++){
+          if (arr_3[i].date == arr_1[j].date){
+            arr1_imp = arr_1[j].impressions
+            j++;
+          }else{
+            arr1_imp = 0
+          }
+          imp_tac.push({
+            'date': arr_3[i].date,
+            'imp1': arr1_imp,
+            'imp2': arr_2[i].impressions,
+            'imp3': arr_3[i].impressions
+          })
+        }
 
-        var arr_stacked = [arr_1, arr_2, arr_3]
-
-        var data = arr;
-
-        // for ( let i = 0; i < arr.length; i++) {
-        // console.log(arr[i].tactic)
-        // }
-
-        var subgroups = ["impressions", "impressions", "conv_rate", "date"]
-
-       // List of groups = species here = value of the first column called group -> I show them on the X axis
+        console.log(imp_tac)
+       var subgroups = ['imp1', 'imp2', 'imp3']
+       var data = imp_tac;
        var groups = d3.map(data, function(d){return(d.date)}).keys()
-
 
         const width = d3.min([
             window.innerWidth * 0.95,
@@ -196,7 +206,6 @@
         const height = d3.min([
             window.innerHeight * 0.9,
         ])
-
 
         let dimensions = {
             width: width,
@@ -237,7 +246,7 @@
 
         const xScale = d3.scaleBand()
             .range([0, dimensions.boundedWidth])
-            .padding(0.2)
+            .padding(0.1)
 
         const yScale = d3.scaleLinear()
             .range([dimensions.boundedHeight, 0])
@@ -251,7 +260,7 @@
 
             var color = d3.scaleOrdinal()
             .domain(subgroups)
-            .range(['#FF8500','#377eb8','#4daf4a'])
+            .range(['#FF8500','#4e79a7','#5EC7EB'])
 
           //stack the data? --> stack per subgroup
           var stackedData = d3.stack()
@@ -347,16 +356,21 @@
             .attr("x", 0)
             .attr("y", 0);
 
+        // var brush = d3.brushX()
+        //     .extent([
+        //         [0, 0],
+        //         [dimensions.boundedWidth, dimensions.boundedHeight]
+        //     ])
+        //     .on("end", updateChart)
+
         var area = bounds.append("g")
             .attr("class","areas")
             .attr("clip-path", "url(#clip)")
 
-
-
         const curve2 = d3.curveLinear
 
         const line1 = d3.line()
-            .x(d => xScale(xAccessor(d)))
+            .x(d => xxScale(xAccessor(d)))
             .y(d => y2Scale(y2Accessor(d)))
             .curve(curve2)
 
@@ -367,61 +381,75 @@
             .attr("stroke", "white")
             .attr("d", line1(arr))
 
-            area.append("g")
-            .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
-            .data(stackedData)
-            .enter().append("g")
-              .attr("fill", function(d) { return color(d.key); })
-              .selectAll("rect")
-              // enter a second time = loop subgroup per subgroup to add all rectangles
-              .data(function(d) { return d; })
-              .enter().append("rect")
-                .attr("x", function(d) { return xScale(d.data.date); })
-                .attr("y", function(d) { return yScale(d[1]); })
-                .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
-                .attr("width",xScale.bandwidth())
+        area.append("g")
+        .selectAll("g")
+        // Enter in the stack data = loop key per key = group per group
+        .data(stackedData)
+        .enter().append("g")
+          .attr("fill", function(d) { return color(d.key); })
+          .selectAll("rect")
+          // enter a second time = loop subgroup per subgroup to add all rectangles
+          .data(function(d) { return d; })
+          .enter().append("rect")
+          .attr("class", "bars")
+            .attr("x", function(d) { return xScale(d.data.date); })
+            .attr("y", function(d) { return yScale(d[1]); })
+            .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+            .attr("width",xScale.bandwidth())
 
-        // area
-        //     .selectAll(".bar1")
-        //     .data(arr_1)
-        //     .enter()
-        //     .append("rect")
-        //     .attr("class","bar1")
-        //     .attr("fill", "#5EC7EB") // INI blue
-        //     .attr("x", d => xScale(xAccessor(d)))
-        //     .attr("y", d => yScale(yAccessor(d)))
-        //     .attr("height", d=> dimensions.boundedHeight -  yScale(yAccessor(d)))
-        //     .attr("width", xScale.bandwidth());
+          // area
+          //     .append("g")
+          //     .attr("class", "brush")
+          //     .call(brush);
         //
-        // area
-        //     .selectAll(".bar2")
-        //     .data(arr_2)
-        //     .enter()
-        //     .append("rect")
-        //     .attr("class","bar2")
-        //     .attr("fill", "#4e79a7") // dark blue
-        //     .attr("x", d => xScale(xAccessor(d)))
-        //     .attr("y", d => yScale(yAccessor(d)))
-        //     .attr("height", d=> dimensions.boundedHeight -  yScale(yAccessor(d)))
-        //     .attr("width", xScale.bandwidth());
-
-        // area
-        //     .selectAll(".bar3")
-        //     .data(arr_3)
-        //     .enter()
-        //     .append("rect")
-        //     .attr("class","bar3")
-        //     .attr("fill", "#FF8500") // Orange
-        //     .attr("x", d => xScale(xAccessor(d)))
-        //     .attr("y", d => yScale(yAccessor(d)))
-        //     .attr("height", d=> dimensions.boundedHeight -  yScale(yAccessor(d)))
-        //     .attr("width", xScale.bandwidth());
+        // var idleTimeout
         //
+        // function idled() {
+        //     idleTimeout = null;
+        // }
         //
-
-
-
+        // function updateChart() {
+        //     // What are the selected boundaries?
+        //     var extent = d3.event.selection
+        //     // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        //     if (!extent) {
+        //         if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+        //         xxScale.domain([4, 8])
+        //     } else {
+        //         xxScale.domain([xxScale.invert(extent[0]), xxScale.invert(extent[1])])
+        //         area.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+        //     }
+        //     // Update axis and area position
+        //     xAxis.transition().duration(1000).call(
+        //         d3.axisBottom(xxScale)
+        //         .ticks(5)
+        //         .tickFormat(formatDate2))
+        //
+        //     area
+        //     .select('.bars')
+        //     .transition()
+        //     .duration(1000)
+        //     .attr("x", function(d) { return xScale(d.data.date); })
+        //     .attr("y", function(d) { return yScale(d[1]); })
+        //     .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+        //     .attr("width",xScale.bandwidth())
+        //
+        // }
+        //
+        // bounds.on("dblclick", function() {
+        //     xScale.domain(d3.extent(arr, xAccessor))
+        //     xAxis.transition().call(d3.axisBottom(xScale)
+        //         .ticks(9)
+        //         .tickFormat(formatDate))
+        //     area
+        //         .select('.bars1')
+        //         .transition()
+        //         .attr("x", function(d) { return xScale(d.data.date); })
+        //         .attr("y", function(d) { return yScale(d[1]); })
+        //         .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+        //         .attr("width",xScale.bandwidth())
+        //
+        // });
         const remove_zero = d => (d / 1e6) + "M";
 
         const yAxisGenerator = d3.axisLeft()
