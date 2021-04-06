@@ -40,9 +40,6 @@
              worksheetData.columns.map(d => {
                  cols.push(d.fieldName);
              })
-             console.log(cols)
-             console.log(worksheetData.data)
-
              worksheetData.data.map(d => {
                  dataJson = {};
                  for (let i = 0; i < cols.length; i++) {
@@ -65,7 +62,7 @@
 
 
              });
-             console.log(newArr)
+
 
              let sums = {};
              let i;
@@ -103,7 +100,6 @@
 
              sumsArr.sort((a, b) => (a.date > b.date) ? 1 : -1)
 
-          console.log(sumsArr)
              drawDotChart(sumsArr);
 
          });
@@ -157,13 +153,13 @@
         const dateParser = d3.timeParse("%Y-%m-%d")
         const formatDate = d3.timeFormat("%b %-d, %y")
         const formatDate2 = d3.timeFormat("%b %d")
-
         const xAccessor = d => dateParser(d.date)
         const yAccessor = d => d.impressions
         const y2Accessor = d => d.conv_rate
         const add_commas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         const tactic = d => d.tactic
 
+      
         var arr_1 = []
         var arr_2 = []
         var arr_3 = []
@@ -195,7 +191,6 @@
           })
         }
 
-        console.log(imp_tac)
        var subgroups = ['imp1', 'imp2', 'imp3']
        var data = imp_tac;
        var groups = d3.map(data, function(d){return(d.date)}).keys()
@@ -314,8 +309,8 @@
                 .duration(200)
                 .style("opacity", 0.95)
             d3.select(this)
-                .style("opacity", 1)
-            div.html("Impressions: " + d.impressions)
+                .style("opacity", 0.8)
+            div.html("Impressions: " + d.impressions + "</br>" + "Conversion Rate: " + d.conv_rate)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         };
@@ -325,27 +320,9 @@
                 .duration(200)
                 .style("opacity", 0);
             d3.select(this)
-                .style("opacity", 0.6)
+                .style("opacity", 1)
         };
 
-        function mouseOnLine(d) {
-            div.transition()
-                .duration(200)
-                .style("opacity", 0.95)
-            d3.select(this)
-                .style("opacity", 0.3)
-            div.html("Partner:" + d.partner + "<br/>" + "Impressions: " + d.impressions)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
-        };
-
-        function mouseOutLine(d) {
-            div.transition()
-                .duration(200)
-                .style("opacity", 0);
-            d3.select(this)
-            .style("opacity", 0);
-        };
 
         var clip = bounds.append("defs").append("svg:clipPath")
             .attr("id", "clip")
@@ -396,6 +373,10 @@
             .attr("y", function(d) { return yScale(d[1]); })
             .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
             .attr("width",xScale.bandwidth())
+
+        area.selectAll("rect")
+        .on("mouseover",mouseOn)
+        .on("mouseout", mouseOut)
 
           // area
           //     .append("g")
@@ -468,7 +449,7 @@
 
         const y2AxisGenerator = d3.axisRight()
             .scale(y2Scale)
-            .ticks(5)
+            .ticks(6)
             // .tickFormat(d => (d * 10) + "%");
 
         const y2Axis = bounds.append("g")
