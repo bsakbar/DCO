@@ -159,7 +159,7 @@
         const add_commas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         const tactic = d => d.tactic
 
-      
+
         var arr_1 = []
         var arr_2 = []
         var arr_3 = []
@@ -190,6 +190,10 @@
             'imp3': arr_3[i].impressions
           })
         }
+        console.log(arr_1,arr_2,arr_3)
+
+        console.log(imp_tac)
+
 
        var subgroups = ['imp1', 'imp2', 'imp3']
        var data = imp_tac;
@@ -243,6 +247,10 @@
             .range([0, dimensions.boundedWidth])
             .padding(0.1)
 
+        const logScale = d3.scaleLog()
+            .domain([10, 100000])
+            .range([0, 600]);
+
         const yScale = d3.scaleLinear()
             .range([dimensions.boundedHeight, 0])
 
@@ -251,11 +259,13 @@
             .range([dimensions.boundedHeight, 0])
 
             xScale.domain(groups);
-            yScale.domain([0, d3.max(arr, yAccessor)]);
+            yScale.domain([0, 6e6]);
 
             var color = d3.scaleOrdinal()
             .domain(subgroups)
-            .range(['#FF8500','#4e79a7','#5EC7EB'])
+            .range(['#d93251','#4e79a7','#5EC7EB'])
+            // (red, dark-blue, light-blue)
+            // (in-market, behavioral,lookalike )
 
           //stack the data? --> stack per subgroup
           var stackedData = d3.stack()
@@ -302,15 +312,47 @@
 
         const curve = d3.curveLinear
 
+        var tooltip = d3.select("#wrapper")
+           .append("div")
+           .style("opacity", 0)
+           .attr("class", "tooltip")
+           .style("background-color", "#1b2326")
+           .style("border-radius", "5px")
+           .style("padding", "8px")
+
+        var mouseover = function(d) {
+          d3.select(this)
+              .style("opacity", 0.8)
+            var subgroupName = d3.select(this.parentNode).datum().key;
+            var subgroupValue = d.data[subgroupName];
+            tooltip
+                .html("Impressions: " + add_commas(subgroupValue))
+                .style("opacity", 0.95)
+          }
+          var mousemove = function(d) {
+            tooltip
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY -40) + "px");
+          }
+          var mouseleave = function(d) {
+            tooltip
+              .style("opacity", 0)
+            d3.select(this)
+                .style("opacity", 0.95)
+          }
 
 
         function mouseOn(d) {
+          var test = [];
+          for ( let i = 0; i < imp_tac.length ; i++ ){
+            test = imp_tac[i].date
+          }
             div.transition()
                 .duration(200)
                 .style("opacity", 0.95)
             d3.select(this)
-                .style("opacity", 0.8)
-            div.html("Impressions: " + d.impressions + "</br>" + "Conversion Rate: " + d.conv_rate)
+                .style("opacity", 0.6)
+            div.html("Impressions: " + d.date + "</br>")
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         };
@@ -324,14 +366,14 @@
         };
 
 
-        var clip = bounds.append("defs").append("svg:clipPath")
-            .attr("id", "clip")
-            .append("svg:rect")
-            .attr("width", dimensions.boundedWidth)
-            .attr("height", dimensions.boundedHeight)
-            .attr("stroke","none")
-            .attr("x", 0)
-            .attr("y", 0);
+        // var clip = bounds.append("defs").append("svg:clipPath")
+        //     .attr("id", "clip")
+        //     .append("svg:rect")
+        //     .attr("width", dimensions.boundedWidth)
+        //     .attr("height", dimensions.boundedHeight)
+        //     .attr("stroke","none")
+        //     .attr("x", 0)
+        //     .attr("y", 0);
 
         // var brush = d3.brushX()
         //     .extent([
@@ -342,7 +384,7 @@
 
         var area = bounds.append("g")
             .attr("class","areas")
-            .attr("clip-path", "url(#clip)")
+            // .attr("clip-path", "url(#clip)")
 
         const curve2 = d3.curveLinear
 
@@ -354,8 +396,8 @@
         area.append("path")
             .data(arr)
             .attr("fill", 'none')
-            .attr("stroke-width","1px")
-            .attr("stroke", "white")
+            .attr("stroke-width","0.5px")
+            .attr("stroke", "#1B2326")
             .attr("d", line1(arr))
 
         area.append("g")
@@ -375,8 +417,9 @@
             .attr("width",xScale.bandwidth())
 
         area.selectAll("rect")
-        .on("mouseover",mouseOn)
-        .on("mouseout", mouseOut)
+        .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
 
           // area
           //     .append("g")
@@ -449,7 +492,7 @@
 
         const y2AxisGenerator = d3.axisRight()
             .scale(y2Scale)
-            .ticks(6)
+            .ticks(4)
             // .tickFormat(d => (d * 10) + "%");
 
         const y2Axis = bounds.append("g")
@@ -466,7 +509,7 @@
 
         const xAxisGenerator = d3.axisBottom()
             .scale(xxScale)
-            .ticks(9)
+            .ticks(5)
             .tickFormat(formatDate);
 
 
@@ -486,7 +529,7 @@
             .style("font-size", "10")
             .style("font-weight", "bold")
             .html("")
-            .attr("fill", "white")
+            .attr("fill", "#1B2326")
 
         const yAxisLabel = yAxis.append("text")
             .attr("x", -dimensions.boundedHeight / 2)
@@ -497,7 +540,7 @@
             .html("Impressions")
             .style("transform", "rotate(-90deg)")
             .style("text-anchor", "middle")
-            .style("fill", "white")
+            .style("fill", "#1B2326")
 
         const y2AxisLabel = y2Axis.append("text")
             .attr("x", dimensions.boundedHeight / 2)
@@ -508,7 +551,7 @@
             .html("Conversion Rate")
             .style("transform", "rotate(90deg)")
             .style("text-anchor", "middle")
-            .attr("fill", "white")
+            .attr("fill", "#1B2326")
 
     }
 

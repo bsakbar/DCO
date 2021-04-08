@@ -1,6 +1,6 @@
 body{
-  background-color: #1b2326;
-  /* background-color: white; */
+  background-color: #F5F2EE;
+  overflow:hidden;
 
 }
 
@@ -25,15 +25,15 @@ form{
 }
 
 div.DTS div.dataTables_scrollBody {
-    background-color: white;
+    background-color: #1B2326;
 }
 
 .sheet_name {
-    background-color: #1B2326;
+    background-color: #F5F2EE;
     font-size: 24px;
     font-family: "League Gothic";
     /* text-transform: uppercase; */
-    color:white;
+    color:#1B2326;
     padding-left: 5px;
     margin-top: -3px;
     height: 32px;
@@ -52,7 +52,7 @@ div.DTS div.dataTables_scrollBody {
 .legend_name{
   display: flex;
   letter-spacing: -0.5px;
-  color: white;
+  color: #1B2326;
   font-family: "Arial";
   font-size: 12px;
   margin-left:5px;
@@ -61,7 +61,7 @@ div.DTS div.dataTables_scrollBody {
 
 .legend_1{
   display: flex;
-  color: white;
+  color: #1B2326;
   background-color: #5EC7EB;
   height: 10px;
   width:10px;
@@ -71,7 +71,7 @@ div.DTS div.dataTables_scrollBody {
 
 .legend_2{
   display: flex;
-  color: white;
+  color: #1B2326;
   background-color: #4e79a7;
   height: 10px;
   width:10px;
@@ -80,8 +80,8 @@ div.DTS div.dataTables_scrollBody {
 }
 .legend_3{
   display: flex;
-  color: white;
-  background-color: #FF8500;
+  color: #1B2326;
+  background-color: #d93251;
   height: 10px;
   width:10px;
   margin-left: 10px;
@@ -102,23 +102,22 @@ div.tooltip {
     padding: 10px;
     /* padding-left: 10px; */
     font-family: "Arial";
-    background: #F5F2EE;
-    color: #1b2326;
+    background: #1B2326;
+    color: #F5F2EE;
     font-size: 12px;
     border: 0px;
-    border-radius: 8px;
     pointer-events: none;
 }
 .axisLine text{
-  fill: white;
+  fill: #1B2326;
 }
 .axisLine path{
-  stroke: white;
+  stroke: #1B2326;
   opacity: 0.5;
 }
 
 .axisLine line{
-  stroke: white;
+  stroke: #1B2326;
   opacity: 0.5;
 }
 
@@ -135,7 +134,7 @@ div.tooltip {
 } */
 
 .grid line {
-  stroke: white;
+  stroke: #1B2326;
   stroke-opacity: 0.2;
 }
 
